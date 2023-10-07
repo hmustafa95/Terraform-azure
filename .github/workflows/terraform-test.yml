@@ -1,0 +1,33 @@
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Terraform CLI
+        run: |
+          echo "Installing Terraform..."
+          wget https://releases.hashicorp.com/terraform/0.15.0/terraform_0.15.0_linux_amd64.zip
+          unzip terraform_0.15.0_linux_amd64.zip
+          sudo mv terraform /usr/local/bin/
+          terraform --version
+
+      - name: Initialize Terraform
+        run: |
+          echo "Initializing Terraform..."
+          terraform init
+
+      - name: Terraform Format
+        run: terraform fmt -check -recursive
+
+      - name: Validate Terraform Files
+        run: |
+          echo "Validating Terraform files..."
+          terraform validate
