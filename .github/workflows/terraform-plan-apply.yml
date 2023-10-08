@@ -45,7 +45,7 @@ jobs:
           terraform validate
 
       - name: Generate Terraform Plan
-        run: terraform plan -out=tfplan -var-file=terraform.tfvars
+        run: terraform plan -out=tfplan -var-file=values.tfvars
 
       - name: Upload Terraform Plan
         uses: actions/upload-artifact@v2
