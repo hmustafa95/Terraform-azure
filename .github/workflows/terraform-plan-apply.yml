@@ -44,6 +44,10 @@ jobs:
           echo "Validating Terraform files..."
           terraform validate
 
+      - name: Copy terraform.tfvars
+        run: |
+          cp values.tfvars .
+
       - name: Generate Terraform Plan
         run: terraform plan -out=tfplan
 
