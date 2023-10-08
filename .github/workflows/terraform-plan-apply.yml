@@ -1,83 +1,83 @@
-on:
-  push:
-    branches:
-      - master
+# on:
+#   push:
+#     branches:
+#       - master
 
-env:
-  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-  ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+# env:
+#   ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+#   ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+#   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+#   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
-jobs:
-  terraform-plan:
-    runs-on: ubuntu-latest
+# jobs:
+#   terraform-plan:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
 
-      - name: Login to Azure via Azure CLI
-        run: |
-          echo "$AZURE_CREDENTIALS" > azure-credentials.json
-          az login --service-principal --tenant $ARM_TENANT_ID --username $ARM_CLIENT_ID --password $ARM_CLIENT_SECRET
-          az account set --subscription $ARM_SUBSCRIPTION_ID
+#       - name: Login to Azure via Azure CLI
+#         run: |
+#           echo "$AZURE_CREDENTIALS" > azure-credentials.json
+#           az login --service-principal --tenant $ARM_TENANT_ID --username $ARM_CLIENT_ID --password $ARM_CLIENT_SECRET
+#           az account set --subscription $ARM_SUBSCRIPTION_ID
 
-      - name: Install Terraform CLI
-        run: |
-          echo "Installing Terraform..."
-          wget https://releases.hashicorp.com/terraform/0.15.0/terraform_0.15.0_linux_amd64.zip
-          unzip terraform_0.15.0_linux_amd64.zip
-          sudo mv terraform /usr/local/bin/
-          terraform --version
+#       - name: Install Terraform CLI
+#         run: |
+#           echo "Installing Terraform..."
+#           wget https://releases.hashicorp.com/terraform/0.15.0/terraform_0.15.0_linux_amd64.zip
+#           unzip terraform_0.15.0_linux_amd64.zip
+#           sudo mv terraform /usr/local/bin/
+#           terraform --version
 
-      - name: Initialize Terraform
-        run: |
-          echo "Initializing Terraform..."
-          terraform init
+#       - name: Initialize Terraform
+#         run: |
+#           echo "Initializing Terraform..."
+#           terraform init
 
-      - name: Terraform Format
-        run: terraform fmt -check -recursive
+#       - name: Terraform Format
+#         run: terraform fmt -check -recursive
 
-      - name: Validate Terraform Files
-        run: |
-          echo "Validating Terraform files..."
-          terraform validate
+#       - name: Validate Terraform Files
+#         run: |
+#           echo "Validating Terraform files..."
+#           terraform validate
 
-      - name: Generate Terraform Plan
-        run: terraform plan -out=tfplan -var-file=values.tfvars
+#       - name: Generate Terraform Plan
+#         run: terraform plan -out=tfplan -var-file=values.tfvars
 
-      - name: Upload Terraform Plan
-        uses: actions/upload-artifact@v2
-        with:
-          name: terraform-plan
-          path: tfplan
+#       - name: Upload Terraform Plan
+#         uses: actions/upload-artifact@v2
+#         with:
+#           name: terraform-plan
+#           path: tfplan
 
-  terraform-apply:
-    needs: terraform-plan
-    runs-on: ubuntu-latest
+#   terraform-apply:
+#     needs: terraform-plan
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
 
-      - name: Install Terraform CLI
-        run: |
-          echo "Installing Terraform..."
-          wget https://releases.hashicorp.com/terraform/0.15.0/terraform_0.15.0_linux_amd64.zip
-          unzip terraform_0.15.0_linux_amd64.zip
-          sudo mv terraform /usr/local/bin/
-          terraform --version
+#       - name: Install Terraform CLI
+#         run: |
+#           echo "Installing Terraform..."
+#           wget https://releases.hashicorp.com/terraform/0.15.0/terraform_0.15.0_linux_amd64.zip
+#           unzip terraform_0.15.0_linux_amd64.zip
+#           sudo mv terraform /usr/local/bin/
+#           terraform --version
 
-      - name: Initialize Terraform
-        run: |
-          echo "Initializing Terraform..."
-          terraform init
+#       - name: Initialize Terraform
+#         run: |
+#           echo "Initializing Terraform..."
+#           terraform init
 
-      - name: Download Terraform Plan
-        uses: actions/download-artifact@v2
-        with:
-          name: terraform-plan
+#       - name: Download Terraform Plan
+#         uses: actions/download-artifact@v2
+#         with:
+#           name: terraform-plan
 
-      - name: Apply Terraform Plan
-        run: terraform apply -auto-approve tfplan
+#       - name: Apply Terraform Plan
+#         run: terraform apply -auto-approve tfplan
