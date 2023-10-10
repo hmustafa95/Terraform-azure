@@ -13,14 +13,14 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      # Checkout the repository to the github Action Runner
-      - name: Checkout
-        uses: actions/checkout@v3
-      # Login to Azure via Azure CLI
-      - name: Login via Azure CLI
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Login to Azure via Azure CLI
+        run: |
+          echo "$AZURE_CREDENTIALS" > azure-credentials.json
+          az login --service-principal --tenant $ARM_TENANT_ID --username $ARM_CLIENT_ID --password $ARM_CLIENT_SECRET
+          az account set --subscription $ARM_SUBSCRIPTION_ID
       # Install the latest verssion of the Terraform CLI
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
