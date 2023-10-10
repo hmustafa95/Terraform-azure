@@ -2,10 +2,10 @@ on:
   push:
     branches: "master"
 env:
-  AMR_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-  AMR_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-  AMR_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-  AMR_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
 jobs:
   terraform-plan:
@@ -18,7 +18,6 @@ jobs:
 
       - name: Login to Azure via Azure CLI
         run: |
-          echo "$AZURE_CREDENTIALS" > azure-credentials.json
           az login --service-principal --tenant $ARM_TENANT_ID --username $ARM_CLIENT_ID --password $ARM_CLIENT_SECRET
           az account set --subscription $ARM_SUBSCRIPTION_ID
       # Install the latest verssion of the Terraform CLI
