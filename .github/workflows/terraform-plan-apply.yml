@@ -32,7 +32,7 @@ jobs:
       # Generate an execution plan for Terraform
       - name: Terraform Plan
         id: tf-plan
-        run: terraform plan -out tfplan
+        run: terraform plan -var-file=values.tfvars -out tfplan
       # Save plan to artifacts
       - name: Publish Terraform Plan
         uses: actions/upload-artifact@v3
@@ -69,4 +69,4 @@ jobs:
 
       # Terraform Apply
       - name: Terraform Apply
-        run: terraform apply -auto-approve tfplan
+        run: terraform apply -auto-approve tfplan -var-file=values.tfvars
