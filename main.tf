@@ -10,6 +10,7 @@ terraform {
     storage_account_name = "taskboardstorage31"
     container_name = "taskboardcontainer"
     key = "terraform.tfstate"
+  }
 }
 
 provider "azurerm" {
